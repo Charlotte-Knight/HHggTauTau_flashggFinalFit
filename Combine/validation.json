@@ -1,0 +1,70 @@
+{
+    "largeNormEff": {
+        "MET_JER_2016": {
+            "SR2": {
+                "ggH_2016_hgg": {
+                    "value_d": 1.259,
+                    "value_u": 0.741
+                }
+            }
+        },
+        "MET_JER_2018": {
+            "SR1": {
+                "VBFH_2018_hgg": {
+                    "value_d": 1.162,
+                    "value_u": 0.838
+                }
+            }
+        },
+        "MET_JES_2017": {
+            "SR1": {
+                "VBFH_2017_hgg": {
+                    "value_d": 1.129,
+                    "value_u": 0.871
+                }
+            }
+        },
+        "MET_JES_2018": {
+            "SR1": {
+                "VBFH_2018_hgg": {
+                    "value_d": 1.162,
+                    "value_u": 0.838
+                }
+            }
+        },
+        "MET_Unclustered_2016": {
+            "SR1": {
+                "ggH_2016_hgg": {
+                    "value_d": 0.843,
+                    "value_u": 1.157
+                }
+            },
+            "SR2": {
+                "VBFH_2016_hgg": {
+                    "value_d": 0.869,
+                    "value_u": 1.131
+                },
+                "ggH_2016_hgg": {
+                    "value_d": 1.297,
+                    "value_u": 0.703
+                }
+            }
+        },
+        "MET_Unclustered_2017": {
+            "SR2": {
+                "VBFH_2017_hgg": {
+                    "value_d": 0.884,
+                    "value_u": 1.116
+                }
+            }
+        },
+        "MET_Unclustered_2018": {
+            "SR1": {
+                "VBFH_2018_hgg": {
+                    "value_d": 0.851,
+                    "value_u": 1.149
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "HHggTauTau":{
+        "ggHH_xsec":[1.045,0.936]
+    },
+    "HHggWWdileptonic":{
+        "ggHH_xsec":[1.045,0.936]
+    },
+    "HHggWWsemileptonic":{
+        "ggHH_xsec":[1.045,0.936]
+    }
+}
