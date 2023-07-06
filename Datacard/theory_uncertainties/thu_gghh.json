@@ -1,11 +1,20 @@
 {
     "HHggTauTau":{
+        "QCDscale_ggHH":[0.950,1.022],
+        "BR_htt":[0.9837,1.0165],
+        "pdf_Higgs_ggHH":1.030,
         "ggHH_xsec":[1.045,0.936]
     },
     "HHggWWdileptonic":{
+        "QCDscale_ggHH":[0.950,1.022],
+        "BR_htt":[0.9837,1.0165],
+        "pdf_Higgs_ggHH":1.030,
         "ggHH_xsec":[1.045,0.936]
     },
     "HHggWWsemileptonic":{
+        "QCDscale_ggHH":[0.950,1.022],
+        "BR_htt":[0.9837,1.0165],
+        "pdf_Higgs_ggHH":1.030,
         "ggHH_xsec":[1.045,0.936]
     }
 }
