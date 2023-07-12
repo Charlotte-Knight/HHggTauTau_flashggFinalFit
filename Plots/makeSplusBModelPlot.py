@@ -32,6 +32,7 @@ def get_options():
   parser.add_option("--blindingRegion", dest="blindingRegion", default="116,134", help="Region in xvar to blind")
   parser.add_option("--dataScaler", dest="dataScaler", default=1., type='float', help="Scaling term for data histogram")
   parser.add_option("--doBkgRenormalization", dest="doBkgRenormalization", default=False, action="store_true", help="Do Bkg renormalization")
+  parser.add_option("--doResonantBackground", dest="doResonantBackground", default=False, action="store_true", help="Do resonant background")
   parser.add_option("--doBands", dest="doBands", default=False, action="store_true", help="Do +-1/2sigma bands for bkg model")
   parser.add_option("--doToyVeto", dest="doToyVeto", default=False, action="store_true", help="Veto non-sensical toys with 0 as first entry in bin")
   parser.add_option("--loadToyYields", dest="loadToyYields", default='', help="Load pkl file storing toy yields in dataframe")
@@ -331,11 +332,27 @@ for cidx in range(len(cats)):
     print "    * Yield for category: S = %.2f, B=%.2f"%(S,Bcorr)
   else: print "    * Yield for category: S = %.2f, B=%.2f"%(S,B)
 
+
+  if opt.doResonantBackground:
+    w.var("r").setVal(0)
+    h_hbpdf = {'pdfNBins':sbpdf.createHistogram("h_hb_pdfNBins_%s"%c,_xvar,ROOT.RooFit.Binning(opt.pdfNBins,xvar.getMin(),xvar.getMax())),
+               'nBins':sbpdf.createHistogram("h_hb_nBins_%s"%c,_xvar,ROOT.RooFit.Binning(opt.nBins,xvar.getMin(),xvar.getMax()))
+    }
+
+    h_hpdf = {'pdfNBins':h_sbpdf['pdfNBins']-h_hbpdf['pdfNBins'],
+              'nBins':h_sbpdf['nBins']-h_hbpdf['nBins']
+             }
+
+    h_bpdf = {'pdfNBins':h_bpdf['pdfNBins']+h_hpdf['pdfNBins'],
+              'nBins':h_bpdf['nBins']+h_hpdf['nBins']
+             }
+
   # Extract signal pdf
   print "    * creating pdf histogram: S"
   h_spdf = {'pdfNBins':h_sbpdf['pdfNBins']-h_bpdf['pdfNBins'],
             'nBins':h_sbpdf['nBins']-h_bpdf['nBins']
-           }
+           }  
+
   
   # Scale pdf histograms to match binning used
   xvar_range = int(xvar.getBinning().highBound()-xvar.getBinning().lowBound())
