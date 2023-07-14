@@ -43,11 +43,15 @@ globalReplacementMap['ggtt_nonRes']['procRVMap'] = od()
 
 globalReplacementMap['ggtt_nonRes']["procRVMap"]["SR1"] = "HHggTauTau"
 globalReplacementMap['ggtt_nonRes']["procRVMap"]["SR2"] = "HHggTauTau"
+globalReplacementMap['ggtt_nonRes']["procRVMap"]["SR3"] = "HHggTauTau"
+globalReplacementMap['ggtt_nonRes']["procRVMap"]["SR4"] = "HHggTauTau"
 
 # Replacement category for RV fit
 globalReplacementMap['ggtt_nonRes']["catRVMap"] = od()
 globalReplacementMap['ggtt_nonRes']["catRVMap"]["SR1"] = "SR1"
-globalReplacementMap['ggtt_nonRes']["catRVMap"]["SR2"] = "SR2"
+globalReplacementMap['ggtt_nonRes']["catRVMap"]["SR2"] = "SR1"
+globalReplacementMap['ggtt_nonRes']["catRVMap"]["SR3"] = "SR1"
+globalReplacementMap['ggtt_nonRes']["catRVMap"]["SR4"] = "SR1"
 
 
 # STXS analysis

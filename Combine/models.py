@@ -8,7 +8,21 @@ models = {
 	#--PO \"map=.*/HHggTauTau.*:r[1,0,2]\"",
 
  "ggtt_resBkg_syst":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
-  --PO \"map=.*/HHgg*.*:r[1,0,20]\"",
+  --PO \"map=.*/HHgg*.*:r[1,0,30]\"",
+
+ "bkgOnly":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/HHgg*.*:r[0,0,1]\" \
+  --PO \"map=.*/VH*.*:r[0,0,1]\"  \
+  --PO \"map=.*/ttH*.*:r[0,0,1]\"  \
+  --PO \"map=.*/ggH*.*:r[0,0,1]\"  \
+  --PO \"map=.*/VBFH*.*:r[0,0,1]\"",
+
+ "plots":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/HHgg*.*:r[25,15,35]\" \
+  --PO \"map=.*/VH*.*:r_singleHiggs[1,0,2]\" \
+  --PO \"map=.*/ttH*.*:r_singleHiggs[1,0,2]\" \
+  --PO \"map=.*/ggH*.*:r_singleHiggs[1,0,2]\" \
+  --PO \"map=.*/VBFH*.*:r_singleHiggs[1,0,2]\"",
 
   "mu":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
 --PO \"map=.*/ggH.*:r_ggH[1,0,2]\" \

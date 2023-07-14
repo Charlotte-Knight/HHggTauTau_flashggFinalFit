@@ -102,18 +102,19 @@ run_combine(){
 		#mkdir -p Models/background
 		#cp ../Signal/outdir_packaged/CMS-HGG*.root ./Models/signal/
 		#cp ../Background/outdir_$tag/CMS-HGG*.root ./Models/background/
-		cp ../Datacard/Datacard_$tag.txt Datacard.txt
+		#cp ../Datacard/Datacard_$tag.txt Datacard.txt
 	
-		python RunText2Workspace.py --mode  ggtt_resBkg_syst --dryRun
-		./t2w_jobs/t2w_ggtt_resBkg_syst.sh
+		#python RunText2Workspace.py --mode  ggtt_resBkg_syst --dryRun
+		#./t2w_jobs/t2w_ggtt_resBkg_syst.sh
 
-		combine --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -M AsymptoticLimits -m 125 -d Datacard_ggtt_resBkg_syst.root -n _AsymptoticLimit_r --freezeParameters MH --saveWorkspace  > combine_results_${tag}_unblind.txt
-		#combine --expectSignal 1 -t -1 --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -M AsymptoticLimits -m 125 -d Datacard_ggtt_resBkg_syst.root -n _AsymptoticLimit_r --freezeParameters MH --run=blind > combine_results_${tag}.txt
+		combine --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -M AsymptoticLimits -m 125 -d Datacard_ggtt_resBkg_syst.root -n _AsymptoticLimit_r --freezeParameters MH > combine_results_${tag}_unblind_06072023.txt
+
+		combine --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -M AsymptoticLimits -m 125 -d Datacard_ggtt_resBkg_syst.root -n _AsymptoticLimit_r --freezeParameters MH --run=expected > combine_results_${tag}.txt
 		#combine --expectSignal 1 -t -1 --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -M MultiDimFit --algo grid --points 100 -m 125 -d Datacard_ggtt_resBkg_syst.root -n _Scan_r --freezeParameters MH --rMin 15 --rMax 27 > combine_results_${tag}_scan.txt
 		#python plotLScan.py higgsCombine_Scan_r.MultiDimFit.mH125.root
 		#cp NLL_scan* /home/users/fsetti/public_html/HH2ggtautau/flashggFinalFit/$tag/
 
-		tail combine_results_${tag}.txt
+		#tail combine_results_${tag}.txt
 		#tail combine_results_${tag}_scan.txt
 	popd	
 }
@@ -126,8 +127,8 @@ syst_plots(){
 		#combineTool.py  -t -1 --setParameters r=23 -M Impacts -d Datacard.root --redefineSignalPOI r --autoMaxPOIs "r" --rMin -40 --rMax 100 --squareDistPoiStep --cminDefaultMinimizerStrategy 0 -m 125 --freezeParameters MH --doInitialFit --robustFit 1 --robustHesse 1
 		#combineTool.py  -t -1 --setParameters r=23 -M Impacts -d Datacard.root --redefineSignalPOI r --autoMaxPOIs "r" --rMin -40 --rMax 100 --squareDistPoiStep --cminDefaultMinimizerStrategy 0 -m 125 --freezeParameters MH --robustFit 1   --robustHesse 1 --doFits --parallel 10
 
-		combineTool.py  --setParameters r=23 -M Impacts -d Datacard_ggtt_resBkg_syst.root --redefineSignalPOI r --autoMaxPOIs "r" --rMin -40 --rMax 100 --squareDistPoiStep --cminDefaultMinimizerStrategy 0 -m 125 --freezeParameters MH --doInitialFit --robustFit 1 --robustHesse 1
-		combineTool.py  --setParameters r=23 -M Impacts -d Datacard_ggtt_resBkg_syst.root --redefineSignalPOI r --autoMaxPOIs "r" --rMin -40 --rMax 100 --squareDistPoiStep --cminDefaultMinimizerStrategy 0 -m 125 --freezeParameters MH --robustFit 1   --robustHesse 1 --doFits --parallel 10
+		combineTool.py  --setParameters r=25 -M Impacts -d Datacard_ggtt_resBkg_syst.root --redefineSignalPOI r --autoMaxPOIs "r" --rMin -40 --rMax 100 --squareDistPoiStep --cminDefaultMinimizerStrategy 0 -m 125 --freezeParameters MH --doInitialFit --robustFit 1 --robustHesse 1
+		combineTool.py  --setParameters r=25 -M Impacts -d Datacard_ggtt_resBkg_syst.root --redefineSignalPOI r --autoMaxPOIs "r" --rMin -40 --rMax 100 --squareDistPoiStep --cminDefaultMinimizerStrategy 0 -m 125 --freezeParameters MH --robustFit 1   --robustHesse 1 --doFits --parallel 10
 
 		combineTool.py -M Impacts -d Datacard_ggtt_resBkg_syst.root --redefineSignalPOI r --autoMaxPOIs "r" --rMin -40 --rMax 100 --squareDistPoiStep --cminDefaultMinimizerStrategy 0 -m 125 --freezeParameters MH -o impacts.json 
 
@@ -204,7 +205,7 @@ bias_study(){
 #model_bkg
 #model_sig
 #make_datacard
-#run_combine
+run_combine
 #syst_plots
-copy_plot
+#copy_plot
 #bias_study

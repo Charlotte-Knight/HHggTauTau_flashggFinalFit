@@ -5,18 +5,18 @@ set -x
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 source /vols/grid/cms/setup.sh
 
-tag=09May2023_nonRes_SM_final
+tag=09May2023_nonRes_SM_bkgOnly
 
 cmsenv
 source setup.sh
 
-nToys=1000
+nToys=500
 
 make_toys(){
 	pushd Plots 
 		rm -rf SplusBModels$tag
-		#python makeToys.py --inputWSFile ../Combine/Datacard_bkgOnly.root --ext $tag --dryRun --nToys $nToys
-		python makeToys.py --inputWSFile ../Combine/Datacard_ggtt_resBkg_syst.root --ext $tag --dryRun --nToys $nToys
+		python makeToys.py --inputWSFile ../Combine/Datacard_bkgOnly.root --ext $tag --dryRun --nToys $nToys
+		#python makeToys.py --inputWSFile ../Combine/Datacard_ggtt_resBkg_syst.root --ext $tag --dryRun --nToys $nToys
 		iter=0
 		while [ $iter -lt $nToys ]
 		do			
@@ -37,16 +37,16 @@ make_toys(){
 
 make_SpB(){
 	pushd Plots 
-		#python makeSplusBModelPlot.py --inputWSFile ../Combine/Datacard_bkgOnly.root --cat "all" --doBands --ext $tag --doResonantBackground
-		python makeSplusBModelPlot.py --inputWSFile ../Combine/Datacard_ggtt_resBkg_syst.root --cat "all" --doBands --ext $tag --doResonantBackground --unblind --parameterMap r:10
+		python makeSplusBModelPlot.py --inputWSFile ../Combine/Datacard_bkgOnly.root --cat "all" --doBands --ext $tag --parameterMap r:0
+		#python makeSplusBModelPlot.py --inputWSFile ../Combine/Datacard_ggtt_resBkg_syst.root --cat "all" --doBands --ext $tag --doResonantBackground --unblind --parameterMap r:10
 
 		mkdir -p /home/users/fsetti/public_html/HH2ggtautau/flashggFinalFit/Plots/$tag
 		mkdir -p /home/users/fsetti/public_html/HH2ggtautau/flashggFinalFit/Plots/$tag/SplusBModels
 
-		cp SplusBModels$tag/SR1_CMS_hgg_mass.png /home/users/fsetti/public_html/HH2ggtautau/flashggFinalFit/Plots/$tag/SplusBModels/SR1_CMS_hgg_mass_r10.png
-		cp SplusBModels$tag/SR2_CMS_hgg_mass.png /home/users/fsetti/public_html/HH2ggtautau/flashggFinalFit/Plots/$tag/SplusBModels/SR2_CMS_hgg_mass_r10.png
-		cp SplusBModels$tag/SR1_CMS_hgg_mass.pdf /home/users/fsetti/public_html/HH2ggtautau/flashggFinalFit/Plots/$tag/SplusBModels/SR1_CMS_hgg_mass_r10.pdf
-		cp SplusBModels$tag/SR2_CMS_hgg_mass.pdf /home/users/fsetti/public_html/HH2ggtautau/flashggFinalFit/Plots/$tag/SplusBModels/SR2_CMS_hgg_mass_r10.pdf
+		cp SplusBModels$tag/SR1_CMS_hgg_mass.png /home/users/fsetti/public_html/HH2ggtautau/flashggFinalFit/Plots/$tag/SplusBModels/SR1_CMS_hgg_mass_bkg.png
+		cp SplusBModels$tag/SR2_CMS_hgg_mass.png /home/users/fsetti/public_html/HH2ggtautau/flashggFinalFit/Plots/$tag/SplusBModels/SR2_CMS_hgg_mass_bkg.png
+		cp SplusBModels$tag/SR1_CMS_hgg_mass.pdf /home/users/fsetti/public_html/HH2ggtautau/flashggFinalFit/Plots/$tag/SplusBModels/SR1_CMS_hgg_mass_bkg.pdf
+		cp SplusBModels$tag/SR2_CMS_hgg_mass.pdf /home/users/fsetti/public_html/HH2ggtautau/flashggFinalFit/Plots/$tag/SplusBModels/SR2_CMS_hgg_mass_bkg.pdf
 	popd	
 
 }
@@ -73,5 +73,5 @@ make_plot_ws(){
 
 
 #make_toys
-#make_SpB
-make_plot_ws
+make_SpB
+#make_plot_ws
