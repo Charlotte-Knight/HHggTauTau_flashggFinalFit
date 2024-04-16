@@ -1,5 +1,6 @@
 import ROOT
 import sys
+import os
 
 def getTreeNames(f):
   return [key.GetName() for key in f.GetListOfKeys()]
@@ -41,11 +42,13 @@ def makeArgSet(vars):
     argset.add(v)
   return argset
 
-def main():
-  in_tree = sys.argv[1]
-  out_ws = sys.argv[2]
-
-  f = ROOT.TFile(in_tree)
+def main(args):
+  ff = ROOT.TFile(args.inputTreeFile)
+  
+  if args.TreeDirectory is not None:
+    f = ff.Get(args.TreeDirectory)
+  else:
+    f = ff
 
   tree_names = getTreeNames(f)
 
@@ -79,12 +82,22 @@ def main():
   for datahist in datahists:
     getattr(ws, "import")(datahist)
 
-  f.Close()
+  ff.Close()
 
-  fout = ROOT.TFile(out_ws, "RECREATE")
+  fout = ROOT.TFile(args.outputWSFile, "RECREATE")
   fout.mkdir("tagsDumper")
   fout.cd("tagsDumper")
   ws.Write()
   fout.Close()
 
-main()
+if __name__=="__main__":
+  import argparse
+  parser = argparse.ArgumentParser()
+
+  parser.add_argument('-i', '--inputTreeFile', type=str)
+  parser.add_argument('-o', '--outputWSFile', type=str)
+  parser.add_argument('-d', '--TreeDirectory', default=None, type=str,
+                      help="Directory within root file where the TTree is stored. Default is the root directory")
+  args = parser.parse_args()
+
+  main(args)
