@@ -33,6 +33,24 @@ globalXSBRMap['ggtt_nonRes']['ggH'] = {'mode':'ggH'}
 globalXSBRMap['ggtt_nonRes']['ttH'] = {'mode':'ttH'}
 globalXSBRMap['ggtt_nonRes']['VBFH'] = {'mode':'qqH'}
 
+globalXSBRMap['ggtt_nonRes']['HHggTauTaukl1'] 						= {'mode':'constant','factor':1}
+globalXSBRMap['ggtt_nonRes']['HHggTauTaukl2p45'] 						= {'mode':'constant','factor':1}
+globalXSBRMap['ggtt_nonRes']['HHggTauTaukl5'] 						= {'mode':'constant','factor':1}
+
+globalXSBRMap['ggtt_nonRes']['HHggWWdileptonickl1'] 		= {'mode':'constant','factor':1}
+globalXSBRMap['ggtt_nonRes']['HHggWWdileptonickl2p45'] 		= {'mode':'constant','factor':1}
+globalXSBRMap['ggtt_nonRes']['HHggWWdileptonickl5'] 		= {'mode':'constant','factor':1}
+
+globalXSBRMap['ggtt_nonRes']['HHggWWsemileptonickl1'] 	= {'mode':'constant','factor':1}
+globalXSBRMap['ggtt_nonRes']['HHggWWsemileptonickl2p45'] 	= {'mode':'constant','factor':1}
+globalXSBRMap['ggtt_nonRes']['HHggWWsemileptonickl5'] 	= {'mode':'constant','factor':1}
+
+for bm in ["1", "2", "3", "4", "5", "6", "7", "8", "8a", "9", "10", "11", "12"]:
+  globalXSBRMap['ggtt_nonRes']['HHggTauTau%s'%bm] 						= {'mode':'constant','factor':1}
+  globalXSBRMap['ggtt_nonRes']['HHggWWdileptonic%s'%bm] 		= {'mode':'constant','factor':1}
+  globalXSBRMap['ggtt_nonRes']['HHggWWsemileptonic%s'%bm] 	= {'mode':'constant','factor':1}
+
+
 # For case of inclusive production mode then have no additional factor beyond V branching ratios
 globalXSBRMap['example'] = od()
 globalXSBRMap['example']['decay'] = {'mode':'hgg'}

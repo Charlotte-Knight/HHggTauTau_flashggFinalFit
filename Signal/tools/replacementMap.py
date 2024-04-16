@@ -41,10 +41,15 @@ globalReplacementMap['ggtt_nonRes']['procRVMap'] = od()
 #globalReplacementMap['ggtt_nonRes']["procRVMap"]["SR1"] = "HH2ggtautau"
 #globalReplacementMap['ggtt_nonRes']["procRVMap"]["SR2"] = "HH2ggtautau"
 
-globalReplacementMap['ggtt_nonRes']["procRVMap"]["SR1"] = "HHggTauTau"
-globalReplacementMap['ggtt_nonRes']["procRVMap"]["SR2"] = "HHggTauTau"
-globalReplacementMap['ggtt_nonRes']["procRVMap"]["SR3"] = "HHggTauTau"
-globalReplacementMap['ggtt_nonRes']["procRVMap"]["SR4"] = "HHggTauTau"
+globalReplacementMap['ggtt_nonRes']["procRVMap"]["SR1"] = "HHggTauTau1"
+globalReplacementMap['ggtt_nonRes']["procRVMap"]["SR2"] = "HHggTauTau1"
+globalReplacementMap['ggtt_nonRes']["procRVMap"]["SR3"] = "HHggTauTau1"
+globalReplacementMap['ggtt_nonRes']["procRVMap"]["SR4"] = "HHggTauTau1"
+
+# globalReplacementMap['ggtt_nonRes']["procRVMap"]["SR1"] = "HHggTauTaukl1"
+# globalReplacementMap['ggtt_nonRes']["procRVMap"]["SR2"] = "HHggTauTaukl1"
+# globalReplacementMap['ggtt_nonRes']["procRVMap"]["SR3"] = "HHggTauTaukl1"
+# globalReplacementMap['ggtt_nonRes']["procRVMap"]["SR4"] = "HHggTauTaukl1"
 
 # Replacement category for RV fit
 globalReplacementMap['ggtt_nonRes']["catRVMap"] = od()

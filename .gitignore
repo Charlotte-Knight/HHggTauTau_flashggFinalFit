@@ -39,3 +39,9 @@ Signal/outdir_*
 Background/outdir_*
 Datacard/yields_*
 Plots/SplusBModels*
+SplitUncert*
+Trees_*
+Parquets*
+*.err
+*.out
+*.log

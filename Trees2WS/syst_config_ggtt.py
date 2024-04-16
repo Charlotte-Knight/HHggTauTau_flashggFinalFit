@@ -14,7 +14,8 @@ trees2wsCfg = {
   'theoryWeightContainers':{},
 
   # List of systematics: use string YEAR for year-dependent systematics
-  'systematics':["fnuf","material","JER", "JES", "MET_JES", "MET_Unclustered", "Muon_pt", "Tau_pt", "MCScale_scale", "MCSmear_smear" ],
+  'systematics':["fnuf","material","MCScale_scale", "MCSmear_smear", "JER", "JES", "MET_JES", "MET_Unclustered", "Muon_pt", "Tau_pt"],
+  #'systematics':[],
 
   # Analysis categories: python list of cats or use 'auto' to extract from input tree
   'cats':'auto'

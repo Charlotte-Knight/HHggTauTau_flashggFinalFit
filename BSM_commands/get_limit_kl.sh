@@ -1,15 +1,25 @@
 #!/usr/bin/env bash
 
-set -x
+#set -x
 
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 source /vols/grid/cms/setup.sh
 
-tag=27Apr2023_nonRes_kl_finalFit
-trees=/home/users/fsetti/HHggTauTau/coupling_scan/CMSSW_10_2_13/src/flashggFinalFit/files_systs/$tag/
+tag=SplitUncert_TauID_fix_kl_rerun
+trees=/vols/cms/mdk16/ggtt/NonResFinalFits/CMSSW_10_2_13/src/flashggFinalFit/Trees_${tag}
+
+mh=125.38
 
 cmsenv
 source setup.sh
+
+wait_batch() {
+  while [[ -n $(qstat -xml | grep "${1}") ]]; do
+    echo $(qstat -xml | grep "${1}" | wc -l) "batch jobs remaining..."
+    echo $(qstat -xml -s r | grep "${1}" | wc -l) "batch jobs running..."
+    sleep 10
+  done
+}
 
 model_bkg(){
   pushd Trees2WS
@@ -26,50 +36,59 @@ model_bkg(){
   popd
 }
 
-
 #Construct Signal Models (one per year)
 model_sig(){
-	#procs=("ggHHkl0kt1" "ggHHkl1kt1" "ggHHkl2p45kt1" "ggHHkl5kt1" "ggHHkl0kt1WWdilep" "ggHHkl1kt1WWdilep" "ggHHkl2p45kt1WWdilep" "ggHHkl5kt1WWdilep"  "ggHHkl0kt1WWsemilep" "ggHHkl1kt1WWsemilep" "ggHHkl2p45kt1WWsemilep" "ggHHkl5kt1WWsemilep" "VH" "ttH" "ggH" "VBFH")
-	##procs=("ggHHkl0kt1WW" "ggHHkl1kt1WW" "ggHHkl2p45kt1WW" "ggHHkl5kt1WW")
+	procs=("HHggTauTaukl1" "HHggTauTaukl2p45" "HHggTauTaukl5" "HHggWWdileptonickl1" "HHggWWdileptonickl2p45" "HHggWWdileptonickl5" "HHggWWsemileptonickl1" "HHggWWsemileptonickl2p45" "HHggWWsemileptonickl5" "VH" "ttH" "ggH" "VBFH")
+	#procs=("VBFH" "ttH" "HHggTauTaukl1")
 
-	#for year in 2016 2017 2018
-	##for year in 2016 
-	#do
-	#	rm -rf $trees/ws_signal_$year
-	#	mkdir -p $trees/ws_signal_$year
-	#	for proc in "${procs[@]}"
-	#	do
+	years=("2016" "2017" "2018")
 
-	#		rm -rf $trees/$year/ws_$proc
+	for year in "${years[@]}"; do
+	  rm -rf $trees/ws_signal_$year
+		mkdir -p $trees/ws_signal_$year
+		for proc in "${procs[@]}"; do
 
-	#		pushd Trees2WS
-  #      python trees2ws.py --inputConfig syst_config_ggtt.py --inputTreeFile $trees/$year/${proc}_125_13TeV.root --inputMass 125 --productionMode $proc --year $year --doSystematics
-	#		popd
+			rm -rf $trees/$year/ws_$proc
+			pushd Trees2WS
+			  mkdir -p logs
+				qsub -o ${PWD}/logs/trees2ws_${tag}_${proc}_${year}.out -e ${PWD}/logs/trees2ws_${tag}_${proc}_${year}.err trees2ws.sh $trees $proc $year
+				#bash trees2ws.sh $trees $proc $year
+			popd
+		done
+	done
 
-	#		mv $trees/$year/ws_$proc/${proc}_125_13TeV_$proc.root $trees/ws_signal_$year/output_${proc}_M125_13TeV_pythia8_${proc}.root 
+	wait_batch trees2ws
 
-	#	done
+	pushd Signal
+		for year in "${years[@]}"; do
+			rm -rf outdir_${tag}_$year
+			sed -i "s/dummy/${tag}/g" syst_config_ggtt_$year.py
+			python RunSignalScripts.py --inputConfig syst_config_ggtt_$year.py --mode calcPhotonSyst
+			#python RunSignalScripts.py --inputConfig syst_config_ggtt_$year.py --mode fTest --modeOpts "--doPlots"
+		done
 
-  #  pushd Signal
-  #   rm -rf outdir_${tag}_$year
-  #   sed -i "s/dummy/${tag}/g" syst_config_ggtt_${year}.py
+		sleep 5
+		wait_batch sub_fTest
 
-  #   #python RunSignalScripts.py --inputConfig syst_config_ggtt_$year.py --mode fTest --modeOpts "--doPlots"
-  #   python RunSignalScripts.py --inputConfig syst_config_ggtt_$year.py --mode calcPhotonSyst
-  #   python RunSignalScripts.py --inputConfig syst_config_ggtt_$year.py --mode signalFit --groupSignalFitJobsByCat --modeOpts "--skipVertexScenarioSplit --replacementThreshold 1000 --useDCB "
-  #   #python RunSignalScripts.py --inputConfig syst_config_ggtt_$year.py --mode signalFit --groupSignalFitJobsByCat --modeOpts "--skipVertexScenarioSplit --skipSystematics "
+		for year in "${years[@]}"; do
+		  #python RunSignalScripts.py --inputConfig syst_config_ggtt_$year.py --mode signalFit --groupSignalFitJobsByCat --modeOpts "--skipVertexScenarioSplit --replacementThreshold 1000 --skipSystematics" 
+			python RunSignalScripts.py --inputConfig syst_config_ggtt_$year.py --mode signalFit --modeOpts "--skipVertexScenarioSplit --replacementThreshold 1000 --useDCB" 
+		done
 
-  #   sed -i "s/${tag}/dummy/g" syst_config_ggtt_${year}.py
-  #  popd
-	#done
+		sleep 5
+		wait_batch sub_
 
-  pushd Signal
-    rm -rf outdir_packaged
-    python RunPackager.py --cats SR1 --exts ${tag}_2016,${tag}_2017,${tag}_2018 --batch local --massPoints 125 --mergeYears
-    #python RunPlotter.py --procs all --cats SR1 --years 2016,2017,2018 --ext packaged
-    python RunPackager.py --cats SR2 --exts ${tag}_2016,${tag}_2017,${tag}_2018 --batch local --massPoints 125 --mergeYears
-    #python RunPlotter.py --procs all --cats SR2 --years 2016,2017,2018 --ext packaged
-  popd
+		for year in "${years[@]}"; do
+			sed -i "s/${tag}/dummy/g" syst_config_ggtt_$year.py
+		done
+
+		rm -rf outdir_packaged
+		python RunPackager.py --cats SR1 --exts ${tag}_2016,${tag}_2017,${tag}_2018 --batch local --massPoints 125 --mergeYears
+		python RunPackager.py --cats SR2 --exts ${tag}_2016,${tag}_2017,${tag}_2018 --batch local --massPoints 125 --mergeYears
+
+    python RunPlotter.py --procs HHggTauTaukl1 --cats SR1 --years 2016,2017,2018 --ext packaged
+		python RunPlotter.py --procs HHggTauTaukl1 --cats SR2 --years 2016,2017,2018 --ext packaged
+	popd
 }
 
 make_datacard(){
@@ -78,16 +97,35 @@ make_datacard(){
 
    python RunYields.py --inputWSDirMap 2016=${trees}/ws_signal_2016,2017=${trees}/ws_signal_2017,2018=${trees}/ws_signal_2018 --cats auto --procs auto --batch local --mergeYears --ext $tag --skipZeroes --doSystematics 
    python makeDatacard.py --years 2016,2017,2018 --ext $tag --prune --pruneThreshold 0.000000001 --doSystematics
-	 python prepareDatacard.py
+   cp Datacard.txt Datacard_${tag}.txt
+	 cp Datacard_${tag}.txt Datacard_${tag}_unprepared.txt
+	 python prepareDatacard2.py Datacard_${tag}.txt Datacard_${tag}.txt
   popd
 }
 
-copy_files(){
-		cp Signal/outdir_packaged/CMS-HGG*.root /home/users/fsetti/HHggTauTau/inference/datacards_run2/ggtt/Models/signal/
-		cp Background/outdir_$tag/CMS-HGG*.root /home/users/fsetti/HHggTauTau/inference/datacards_run2/ggtt/Models/background/
+copy_plot(){
+	pushd Combine
+		rm -rf Models
+		mkdir -p Models
+		mkdir -p Models/signal
+		mkdir -p Models/background
+		cp ../Signal/outdir_packaged/CMS-HGG*.root ./Models/signal/
+		cp ../Background/outdir_$tag/CMS-HGG*.root ./Models/background/
+		cp ../Datacard/Datacard_$tag.txt .
+	popd
+
+	mkdir -p ${tag}
+	mkdir -p $tag/Data
+	mkdir -p ${tag}/Signal
+	mkdir -p ${tag}/Combine/Models
+	
+	cp Background/outdir_$tag/bkgfTest-Data/* $tag/Data
+	cp Signal/outdir_packaged/Plots/* ${tag}/Signal
+	cp Combine/Datacard_${tag}* ${tag}/Combine
+	cp -r Combine/Models ${tag}/Combine/Models
 }
 
 model_bkg
 model_sig
 make_datacard
-copy_files
+copy_plot

@@ -316,7 +316,7 @@ def plotInterpolation(_finalModel,_outdir='./',_massPoints='120,121,122,123,124,
   # Extract first hist and clone for axes
   haxes = hists[hists.keys()[0]].Clone()
   haxes.GetXaxis().SetTitle("m_{#gamma#gamma} [GeV]")
-  haxes.GetYaxis().SetTitle("Events / %.2f GeV"%((_finalModel.xvar.getMax()-_finalModel.xvar.getMin())/_finalModel.xvar.getBins()))
+  haxes.GetYaxis().SetTitle("Events / haha %.2f GeV"%((_finalModel.xvar.getMax()-_finalModel.xvar.getMin())/_finalModel.xvar.getBins()))
   haxes.SetMinimum(0)
   haxes.SetMaximum(hmax*1.2)
   haxes.GetXaxis().SetRangeUser(100,150)
@@ -432,11 +432,12 @@ def plotSignalModel(_hists,_opt,_outdir=".",offset=0.02):
   canv.SetTicky()
   h_axes = _hists['data'].Clone()
   h_axes.Reset()
-  h_axes.SetMaximum(_hists['data'].GetMaximum()*1.2)
+  h_axes.SetMaximum(_hists['data'].GetMaximum()*1.1)
   h_axes.SetMinimum(0.)
   h_axes.GetXaxis().SetRangeUser(105,140)
   h_axes.SetTitle("")
-  h_axes.GetXaxis().SetTitle("%s (%s)"%(_opt.xvar.split(":")[1],_opt.xvar.split(":")[2]))
+  h_axes.GetXaxis().SetTitle("%s [%s]"%(_opt.xvar.split(":")[1],_opt.xvar.split(":")[2]))
+  h_axes.GetYaxis().SetTitle("Events / 0.5 GeV")
   h_axes.GetXaxis().SetTitleSize(0.05)
   h_axes.GetXaxis().SetTitleOffset(1.)
   h_axes.GetYaxis().SetTitleSize(0.05)
@@ -451,7 +452,7 @@ def plotSignalModel(_hists,_opt,_outdir=".",offset=0.02):
 
   # Legend
   if len(_opt.years.split(","))>1:
-    leg0 = ROOT.TLegend(0.15+offset,0.6,0.5+offset,0.82)
+    leg0 = ROOT.TLegend(0.15+offset,0.6+0.05,0.5+offset,0.82+0.05)
     leg0.SetFillStyle(0)
     leg0.SetLineColor(0)
     leg0.SetTextSize(0.03)
@@ -459,14 +460,14 @@ def plotSignalModel(_hists,_opt,_outdir=".",offset=0.02):
     leg0.AddEntry(_hists['pdf'],"#splitline{Parametric}{model}","l")
     leg0.Draw("Same")
 
-    leg1 = ROOT.TLegend(0.17+offset,0.45,0.4+offset,0.61)
+    leg1 = ROOT.TLegend(0.17+offset,0.45+0.05,0.4+offset,0.61+0.05)
     leg1.SetFillStyle(0)
     leg1.SetLineColor(0)
     leg1.SetTextSize(0.03)
     for year in _opt.years.split(","): leg1.AddEntry(_hists['pdf_%s'%year],"%s: #scale[0.8]{#sigma_{eff} = %1.2f GeV}"%(year,getEffSigma(_hists['pdf_%s'%year])),"l")
     leg1.Draw("Same")
 
-    leg2 = ROOT.TLegend(0.15+offset,0.3,0.5+offset,0.45)
+    leg2 = ROOT.TLegend(0.15+offset,0.3+0.05,0.5+offset,0.45+0.05)
     leg2.SetFillStyle(0)
     leg2.SetLineColor(0)
     leg2.SetTextSize(0.03)
@@ -535,8 +536,8 @@ def plotSignalModel(_hists,_opt,_outdir=".",offset=0.02):
   lat0.SetNDC()
   lat0.SetTextSize(0.045)
   lat0.DrawLatex(0.15,0.92,"#bf{CMS} #it{%s}"%_opt.label)
-  lat0.DrawLatex(0.77,0.92,"%s TeV"%(sqrts__.split("TeV")[0]))
-  lat0.DrawLatex(0.16+offset,0.83,"H #rightarrow #gamma#gamma")
+  lat0.DrawLatex(0.75,0.92,"(%s TeV)"%(sqrts__.split("TeV")[0]))
+  #lat0.DrawLatex(0.16+offset,0.83,"H #rightarrow #gamma#gamma")
 
   # Load translations
   translateCats = {} if _opt.translateCats is None else LoadTranslations(_opt.translateCats)
@@ -559,8 +560,13 @@ def plotSignalModel(_hists,_opt,_outdir=".",offset=0.02):
   elif len(_opt.cats.split(","))>1: procStr, procExt = "Multiple categories", "multipleCats"
   else: catStr, catExt = Translate(_opt.cats,translateCats), _opt.cats
  
+  if catStr == "SR1":
+    catStr = "Cat 0"
+  elif catStr == "SR2":
+    catStr = "Cat 1"
+
   lat1.DrawLatex(0.85,0.86,"%s"%catStr)
-  lat1.DrawLatex(0.83,0.8,"%s %s"%(procStr,yearStr))
+  #lat1.DrawLatex(0.83,0.8,"%s %s"%(procStr,yearStr))
 
   canv.Update()
 
@@ -572,5 +578,5 @@ def plotSignalModel(_hists,_opt,_outdir=".",offset=0.02):
     with open("%s/effSigma_%s.json"%(_outdir,catExt),"w") as jf: json.dump(es,jf)
 
   # Save canvas
-  canv.SaveAs("%s/smodel_%s%s%s.pdf"%(_outdir,catExt,procExt,yearExt))
-  canv.SaveAs("%s/smodel_%s%s%s.png"%(_outdir,catExt,procExt,yearExt))
+  canv.SaveAs("%s/smodel_%s%s%s_%s.pdf"%(_outdir,catExt,procExt,yearExt,_opt.label))
+  canv.SaveAs("%s/smodel_%s%s%s_%s.png"%(_outdir,catExt,procExt,yearExt,_opt.label))

@@ -163,9 +163,12 @@ for cat in cats:
 
   # Main variables to add to nominal RooDataSets
   dfs['main'] = t.pandas.df(mainVars) if cat!='NOTAG' else t.pandas.df(notagVars)
+  #print(dfs['main'])
 
   # Concatenate current dataframes
   df = pandas.concat(dfs.values(), axis=1)
+  #print(df)
+  print(df.weight_tau_idDeepTauVSjet_sf_AnalysisTau_syst_2018Down01sigma)
 
   # Add STXS splitting var if splitting necessary
   if opt.doSTXSSplitting: df[stxsVar] = t.pandas.df(stxsVar)
@@ -273,6 +276,8 @@ for stxsId in data[stxsVar].unique():
   # Add variables to workspace
   varNames = add_vars_to_workspace(ws,df,stxsVar)
 
+  check_col = "weight_tau_idDeepTauVSjet_sf_AnalysisTau_syst_2018Down01sigma"
+
   # Loop over cats
   for cat in cats:
 
@@ -280,16 +285,36 @@ for stxsId in data[stxsVar].unique():
     mask = (df['cat']==cat)
     # Convert dataframe to structured array, then to ROOT tree
     sa = df[mask].to_records()
+    pandas.set_option('display.max_columns', None)
+    print(df[check_col])
+    print(sa)
     t = array2tree(sa)
+    t.Print()
+    t.Scan(check_col)
 
     # Define RooDataSet
     dName = "%s_%s_%s_%s"%(opt.productionMode,opt.inputMass,sqrts__,cat)
     
     # Make argset
+    print(df.columns)
+    print(varNames)
+    print(list(df.columns))
+    print(list(varNames))
+    # for i in range(len(varNames)):
+    #   print(list(df.columns)[i], list(varNames)[i])
+    #   if list(df.columns)[i] != list(varNames)[i]:
+    #     print("OMG")
+    # for i in range(len(df.columns)):
+    #   print(list(df.columns)[i], list(varNames)[i])
+    #   if list(df.columns)[i] != list(varNames)[i]:
+    #     print("OMG")
+    # assert len(list(df.columns)) == list(varNames)
     aset = make_argset(ws,varNames)
 
     # Convert tree to RooDataset and add to workspace
     d = ROOT.RooDataSet(dName,dName,t,aset,'','weight')
+    d.Print()
+    print("Hello!", d.get(0).getRealValue(check_col))
     getattr(ws,'import')(d)
 
     # Delete trees and RooDataSet from heap

@@ -68,10 +68,10 @@ for ext, fNames_by_ext in fNames.iteritems():
     for _funcName, _func in allFunctions.iteritems(): packagedWS.imp(_func,ROOT.RooFit.RecycleConflictNodes(),ROOT.RooFit.Silence())
     for _pdfName, _pdf in allPdfs.iteritems(): packagedWS.imp(_pdf,ROOT.RooFit.RecycleConflictNodes(),ROOT.RooFit.Silence())
 
-    for _data in allData:
-      # Skip merged datasets
-      if _data.GetName() in data_merged_names: continue
-      else: packagedWS.imp(_data)
+    # for _data in allData:
+    #   # Skip merged datasets
+    #   if _data.GetName() in data_merged_names: continue
+    #   else: packagedWS.imp(_data)
 
 # Save to file
 if not os.path.isdir("outdir_%s"%opt.outputExt): os.system("mkdir outdir_%s"%opt.outputExt)

@@ -108,7 +108,8 @@ for cat,f in inputFiles.iteritems():
   for k, norm in norms.iteritems():
     proc, year = k.split("__")
     _id = "%s_%s_%s_%s"%(proc,year,cat,sqrts__)
-    w.var("IntLumi").setVal(lumiScaleFactor*lumiMap[year])
+    #w.var("IntLumi").setVal(lumiScaleFactor*lumiMap[year])
+    w.var("IntLumi").setVal(lumiScaleFactor*25)
 
     # Prune
     nval = norm.getVal()
@@ -130,8 +131,10 @@ for cat,f in inputFiles.iteritems():
     data_rwgt[_id] = d_rwgt
 
     # Extract pdf and create histogram
-    pdf = w.pdf("extend%s_%sThisLumi"%(outputWSObjectTitle__,_id)) 
+    pdf = w.pdf("extend%s_%sThisLumi"%(outputWSObjectTitle__,_id))
+    print(pdf.expectedEvents(ROOT.RooArgSet(xvar))) 
     hpdfs[_id] = pdf.createHistogram("h_pdf_%s"%_id,xvar,ROOT.RooFit.Binning(opt.pdf_nBins))
+    print(wcat)
     hpdfs[_id].Scale(wcat*float(opt.nBins)/320) # FIXME: hardcoded 320
 
   # Fill total histograms: data, per-year pdfs and pdfs
